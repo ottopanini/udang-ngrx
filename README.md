@@ -1,3 +1,16 @@
+# NGRX
+
+## Redux
+![Redux](assets/redux.png)
+
+## NgRx
+
+![NgRx](assets/ngrx.png)
+Differences to 'normal' Redux:
+- deeply integrated into Angular
+- uses RxJS
+- uses TypeScript
+
 # NgCompleteGuideUpdate
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.
