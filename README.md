@@ -15,6 +15,37 @@ Differences to 'normal' Redux:
 
 `npm install --save @ngrx/store --force`
 
+## The reducer
+... is just a function. Gets 2 parameters passed into:
+- initial State
+- Action
+
+@see the shopping-list.reducer.ts:
+```ts
+import { Action } from '@ngrx/store';
+
+import { Ingredient } from '../shared/ingredient.model';
+
+const initialState = {
+  ingredients: [
+    new Ingredient('Apples', 5),
+    new Ingredient('Tomatoes', 10),
+  ]
+};
+
+export function shoppingListReducer(state = initialState, action: Action) {
+  switch (action.type) {
+    case 'ADD_INGREDIENT':
+      return {
+        ...state,
+        ingredients: [...state.ingredients, action]
+      };
+  }
+}
+```
+
+
+
 # NgCompleteGuideUpdate
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.
