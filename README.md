@@ -11,6 +11,10 @@ Differences to 'normal' Redux:
 - uses RxJS
 - uses TypeScript
 
+## Install NgRx
+
+`npm install --save @ngrx/store --force`
+
 # NgCompleteGuideUpdate
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.
