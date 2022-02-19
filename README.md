@@ -13,7 +13,7 @@ Differences to 'normal' Redux:
 
 ## Install NgRx
 
-`npm install --save @ngrx/store --force`
+`npm install --save @ngrx/store`
 
 ## The reducer
 ... is just a function. Gets 2 parameters passed into:
@@ -43,6 +43,9 @@ export function shoppingListReducer(state = initialState, action: Action) {
   }
 }
 ```
+## Actions
+
+
 
 
 
