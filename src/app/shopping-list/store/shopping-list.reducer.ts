@@ -37,16 +37,20 @@ export function shoppingListReducer(state = initialState,
       return {
         ...state,
         ingredients: state.ingredients.map(
-          (val, index) =>  action.payload.index === index ? {
+          (val, index) =>  state.editedIngredientIndex === index ? {
             ...val,
-            ...action.payload.newIngredient
+            ...action.payload
           } : val
-        )
+        ),
+        editedIngredientIndex: -1,
+        editedIngredient: null
       };
     case ShoppingListActions.DELETE_INGREDIENT:
       return {
         ...state,
-        ingredients: state.ingredients.filter((_, index) => index !== action.payload)
+        ingredients: state.ingredients.filter((_, index) => index !== state.editedIngredientIndex),
+        editedIngredientIndex: -1,
+        editedIngredient: null
       };
     case ShoppingListActions.START_EDIT:
       return {
