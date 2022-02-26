@@ -1,16 +1,14 @@
-import {
-  Component,
-  ComponentFactoryResolver,
-  ViewChild,
-  OnDestroy
-} from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import {Component, ComponentFactoryResolver, OnDestroy, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {Router} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
 
-import { AuthService, AuthResponseData } from './auth.service';
-import { AlertComponent } from '../shared/alert/alert.component';
-import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
+import {AuthResponseData, AuthService} from './auth.service';
+import {AlertComponent} from '../shared/alert/alert.component';
+import {PlaceholderDirective} from '../shared/placeholder/placeholder.directive';
+import {Store} from '@ngrx/store';
+import {AppState} from '../store/app.reducer';
+import {LoginStart} from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
@@ -27,7 +25,8 @@ export class AuthComponent implements OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private store: Store<AppState>
   ) {}
 
   onSwitchMode() {
@@ -46,7 +45,8 @@ export class AuthComponent implements OnDestroy {
     this.isLoading = true;
 
     if (this.isLoginMode) {
-      authObs = this.authService.login(email, password);
+      // authObs = this.authService.login(email, password);
+      this.store.dispatch(new LoginStart({email, password}));
     } else {
       authObs = this.authService.signup(email, password);
     }
