@@ -1,11 +1,12 @@
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Login, LOGIN_START, LoginStart} from './auth.actions';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {Login, LOGIN, LOGIN_START, LoginFail, LoginStart} from './auth.actions';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AuthResponseData} from '../auth.service';
 import {HttpClient} from '@angular/common/http';
 import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
@@ -22,7 +23,24 @@ export class AuthEffects {
             returnSecureToken: true
           }
         ).pipe(
-          catchError(err => of()),
+          catchError(err => {
+            let errorMessage = 'An unknown error occurred!';
+            if (!err.error || !err.error.error) {
+              return of(new LoginFail(errorMessage));
+            }
+            switch (err.error.error.message) {
+              case 'EMAIL_EXISTS':
+                errorMessage = 'This email exists already';
+                break;
+              case 'EMAIL_NOT_FOUND':
+                errorMessage = 'This email does not exist.';
+                break;
+              case 'INVALID_PASSWORD':
+                errorMessage = 'This password is not correct.';
+                break;
+            }
+            return of(new LoginFail(err));
+          }),
           map((resData: AuthResponseData) => of(new Login({
             email: resData.email,
             userId: resData.localId,
@@ -33,6 +51,12 @@ export class AuthEffects {
     })
   );
 
-  constructor(private http: HttpClient, private actions$: Actions) {
+  // does not dispatch an event
+  @Effect({dispatch: false})
+  authSuccess = this.actions$.pipe(ofType(LOGIN), tap(() => {
+    this.router.navigate(['/']);
+  }));
+
+  constructor(private http: HttpClient, private actions$: Actions, private router: Router) {
   }
 }

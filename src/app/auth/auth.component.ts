@@ -51,9 +51,6 @@ export class AuthComponent implements OnInit, OnDestroy {
       authObs = this.authService.signup(email, password);
     }
 
-    this.store.select('auth').subscribe(authState => {
-
-    });
     // authObs.subscribe(
     //   resData => {
     //     console.log(resData);
@@ -102,6 +99,9 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.store.select('auth').subscribe(authState => {
       this.isLoading = authState.loading;
       this.error = authState.authError;
+      if (this.error) {
+        this.showErrorAlert(this.error);
+      }
     });
   }
 }
