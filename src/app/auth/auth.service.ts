@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {User} from './user.model';
 import {Store} from '@ngrx/store';
 import {State} from './store/auth.reducer';
-import {Login, Logout} from './store/auth.actions';
+import {AuthenticateSuccess, Logout} from './store/auth.actions';
 
 export interface AuthResponseData {
   kind: string;
@@ -92,7 +92,7 @@ export class AuthService {
     );
 
     if (loadedUser.token) {
-      this.store.dispatch<Login>(new Login({
+      this.store.dispatch<AuthenticateSuccess>(new AuthenticateSuccess({
         email: loadedUser.email,
         userId: loadedUser.id,
         token: loadedUser.token,
@@ -132,7 +132,7 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     // this.user.next(user);
-    this.store.dispatch<Login>(new Login({ email, userId, token, expirationDate }));
+    this.store.dispatch<AuthenticateSuccess>(new AuthenticateSuccess({ email, userId, token, expirationDate }));
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }
