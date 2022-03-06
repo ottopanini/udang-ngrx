@@ -8,7 +8,7 @@ import {AlertComponent} from '../shared/alert/alert.component';
 import {PlaceholderDirective} from '../shared/placeholder/placeholder.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.reducer';
-import {LoginStart, SignupStart} from './store/auth.actions';
+import {ClearError, LoginStart, SignupStart} from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
@@ -21,6 +21,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   @ViewChild(PlaceholderDirective, { static: false }) alertHost: PlaceholderDirective;
 
   private closeSub: Subscription;
+  private storeSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -70,12 +71,15 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   onHandleError() {
-    this.error = null;
+    this.store.dispatch(new ClearError());
   }
 
   ngOnDestroy() {
     if (this.closeSub) {
       this.closeSub.unsubscribe();
+    }
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
     }
   }
 
@@ -97,7 +101,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.select('auth').subscribe(authState => {
+    this.storeSubscription = this.store.select('auth').subscribe(authState => {
       this.isLoading = authState.loading;
       this.error = authState.authError;
       if (this.error) {
